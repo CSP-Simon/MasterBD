@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('static' ,filename='Style.css')}}">
+</head>
+<body>
+
+
+<h2>Data info</h2>
+{% for table in tables %}
+            {{ table|safe }}
+{% endfor %}
+
+<h2>Number Of Patients In Each Risk Category</h2>
+<img src = "/plot3" >
+
+
+<h2>Analysis In Age on Risk Level</h2>
+<img src = "/boxplot3" >
+
+
+<h2>Correlation</h2>
+<img src = "/cor3" >
+
+</body>
+</html>

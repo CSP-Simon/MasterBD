@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('static' ,filename='Style.css')}}">
+</head>
+<body>
+
+
+<h2>Data info</h2>
+{% for table in tables %}
+            {{ table|safe }}
+{% endfor %}
+
+
+
+<h2>Distributions</h2>
+<img src = "/plot2" >
+
+
+<h2>Correlation</h2>
+<img src = "/cor2" >
+
+
+</body>
+</html>
