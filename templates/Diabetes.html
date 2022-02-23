@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Diabetes Data</title>
     <link rel="stylesheet" href="{{ url_for('static' ,filename='Style.css')}}">
 </head>
 <body>
 
-
+<h1>Diabetes Data</h1>
 <h2>Data info</h2>
 {% for table in tables %}
             {{ table|safe }}
@@ -21,6 +21,23 @@
 
 <h2>Correlation</h2>
 <img src = "/cor2" >
+
+<h2>Sampling</h2>
+
+<h3>Shapes of the data frame after sampling</h3>
+<p>x_train shape: {{  x_train }}</p>
+<p>y_train shape: {{  y_train }}</p>
+<p>x_test shape: {{  x_test }}</p>
+<p>y_test shape: {{  y_test }}</p>
+<h3>Training set head</h3>
+{% for table in x_train_head %}
+            {{ table|safe }}
+{% endfor %}
+<h3>Testing set head</h3>
+{% for table in x_test_head %}
+            {{ table|safe }}
+{% endfor %}
+
 
 
 
