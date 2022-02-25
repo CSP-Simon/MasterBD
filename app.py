@@ -140,8 +140,6 @@ def d_data():
 @app.route('/plot2')
 def plot2():
     features_mean = list(Diabet.columns)
-    # split dataframe into two based on diagnosis
-
     plt.rcParams.update({'font.size': 8})
 
     fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(20, 15))
@@ -167,6 +165,8 @@ def imp2():
     imp = SamplingData(Diabet, "Outcome")
     img = imp.importance(13,5)
     return send_file(img, mimetype='image/png', cache_timeout=-1)
+
+
 # Maternal Health Risk routes
 # -----------------------------------------------------------
 
