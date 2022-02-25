@@ -42,8 +42,11 @@ def b_data():
     df, df2 = table.table()
 
     samp = SamplingData(Bdata, "diagnosis")
-    samp = samp.sampling_data()
-    x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp
+    samp1 = samp.sampling_data()
+    x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp1
+
+
+
 
     return render_template('Bdata.html',
                            tables=[df.to_html(classes='data',
@@ -88,9 +91,19 @@ def plot1():
 
 @app.route('/cor1')
 def cor1():
-    correlation = Correlation(Bdata, 19, 15)
-    img = correlation.cor()
+    correlation = Correlation(Bdata)
+    img = correlation.cor(19, 15)
     return send_file(img, mimetype='image/png', cache_timeout=-1)
+
+@app.route('/imp1')
+def imp1():
+    imp = SamplingData(Bdata, "diagnosis")
+    img = imp.importance(15,10)
+    return send_file(img, mimetype='image/png', cache_timeout=-1)
+
+
+
+
 
 
 # -------------------------------------------------------------------
@@ -145,11 +158,15 @@ def plot2():
 
 @app.route('/cor2')
 def cor2():
-    correlation = Correlation(Diabet, 11, 9)
-    img = correlation.cor()
+    correlation = Correlation(Diabet )
+    img = correlation.cor(11, 9)
     return send_file(img, mimetype='image/png', cache_timeout=-1)
 
-
+@app.route('/imp2')
+def imp2():
+    imp = SamplingData(Diabet, "Outcome")
+    img = imp.importance(13,5)
+    return send_file(img, mimetype='image/png', cache_timeout=-1)
 # Maternal Health Risk routes
 # -----------------------------------------------------------
 
@@ -193,10 +210,16 @@ def plot3():
 
 @app.route('/cor3')
 def cor3():
-    correlation = Correlation(Mdata, 10, 9)
-    img = correlation.cor()
+    correlation = Correlation(Mdata)
+    img = correlation.cor(10, 9)
     return send_file(img, mimetype='image/png', cache_timeout=-1)
 
+
+@app.route('/imp3')
+def imp3():
+    imp = SamplingData(Mdata, "RiskLevel")
+    img = imp.importance(7,4)
+    return send_file(img, mimetype='image/png', cache_timeout=-1)
 
 # ------------------------------------------------------------------
 
