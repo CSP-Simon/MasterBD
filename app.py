@@ -166,7 +166,7 @@ def imp2():
     img = imp.importance(13,5)
     return send_file(img, mimetype='image/png', cache_timeout=-1)
 
-
+# -----------------------------------------------------------
 # Maternal Health Risk routes
 # -----------------------------------------------------------
 
