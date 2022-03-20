@@ -42,3 +42,7 @@ h1{
 
 
 }
+
+.tableLeft { width: 50%; float: left; }
+.tableRight {width: 50%; float: right; }
+.container { overflow: hidden; }

@@ -42,5 +42,20 @@
 <h2>Feature Importance</h2>
 <img src = "/imp2" >
 
+<h3>Prediction</h3>
+ <div class="container">
+ <div class="tableLeft">
+{% for table in pred_output %}
+            {{ table|safe }}
+{% endfor %}
+ </div>
+
+ <div class="tableRight">
+{% for table in pred_output_norm %}
+            {{ table|safe }}
+{% endfor %}
+ </div>
+ </div>
+
 </body>
 </html>

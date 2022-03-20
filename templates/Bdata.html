@@ -39,6 +39,39 @@
 <h2>Feature Importance</h2>
 <img src = "/imp1" >
 
+<h3>Prediction</h3>
+ <div class="container">
+ <div class="tableLeft">
+ <h4>Prediction without normalization </h4>
+{% for table in pred_output %}
+            {{ table|safe }}
+{% endfor %}
+ </div>
 
+ <div class="tableRight">
+ <h4>Prediction with normalization </h4>
+{% for table in pred_output_norm %}
+            {{ table|safe }}
+{% endfor %}
+ </div>
+ </div>
+
+ <h3>Prediction with selected features</h3>
+ <div class="container">
+ <div class="tableLeft">
+ <h4>Prediction without normalization </h4>
+{% for table in pred_output_f %}
+            {{ table|safe }}
+{% endfor %}
+ </div>
+
+ <div class="tableRight">
+ <h4>Prediction with normalization </h4>
+{% for table in pred_output_norm_f %}
+            {{ table|safe }}
+{% endfor %}
+ </div>
+ </div>
+<p>features: {{  feat }}</p>
 </body>
 </html>

@@ -1,13 +1,12 @@
 import matplotlib.pyplot as plt
-from flask import Flask, request, render_template, session, redirect, Response, send_file
+from flask import Flask, render_template, send_file
 import numpy as np
 import pandas as pd
-import tabulate
+
 from flask_navigation import Navigation
 import io
 import seaborn as sns
 from utils import Table, Correlation, SamplingData
-
 
 app = Flask(__name__)
 nav = Navigation(app)
@@ -18,6 +17,7 @@ Bdata = pd.read_csv('Breast Cancer.csv')
 
 # Data cleaning
 Bdata.drop(['Unnamed: 32', 'id'], axis=1, inplace=True)
+
 Bdata.diagnosis.replace(['M', 'B'], [1, 0], inplace=True)
 
 nav.Bar('top', [
@@ -31,6 +31,7 @@ nav.Bar('top', [
 def home():
     return render_template('home.html')
 
+
 # ------------------------------------------------------------
 # Breast Cancer routes
 # ------------------------------------------------------------
@@ -40,13 +41,21 @@ def home():
 def b_data():
     table = Table(Bdata)
     df, df2 = table.table()
-
     samp = SamplingData(Bdata, "diagnosis")
     samp1 = samp.sampling_data()
+
     x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp1
+    pred = samp.pred_models()
+    pred_norm = samp.pred_models_norm()
+    features = samp.feat()
+    target = ["diagnosis"]
+    Bdata_f = Bdata[features + target]
+    samp_f = SamplingData(Bdata_f, "diagnosis")
+    samp1_f = samp.sampling_data()
 
-
-
+    x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp1_f
+    pred_f = samp_f.pred_models()
+    pred_norm_f = samp_f.pred_models_norm()
 
     return render_template('Bdata.html',
                            tables=[df.to_html(classes='data',
@@ -57,10 +66,16 @@ def b_data():
 
                            x_test_head=[x_test_head.to_html(classes='data',
                                                             index=False)],
-                           x_train=x_train,
-                           x_test=x_test,
-                           y_train=y_train,
-                           y_test=y_test
+                           x_train=x_train.shape,
+                           y_train=y_train.shape,
+                           x_test=x_test.shape,
+                           y_test=y_test.shape,
+                           pred_output=[pred.to_html(classes='data', index=False)],
+                           pred_output_norm=[pred_norm.to_html(classes='data', index=False)],
+                           feat=features,
+                           pred_output_f=[pred_f.to_html(classes='data', index=False)],
+                           pred_output_norm_f=[pred_norm_f.to_html(classes='data', index=False)]
+
                            )
 
 
@@ -95,15 +110,12 @@ def cor1():
     img = correlation.cor(19, 15)
     return send_file(img, mimetype='image/png', cache_timeout=-1)
 
+
 @app.route('/imp1')
 def imp1():
     imp = SamplingData(Bdata, "diagnosis")
-    img = imp.importance(15,10)
+    img = imp.importance(15, 10)
     return send_file(img, mimetype='image/png', cache_timeout=-1)
-
-
-
-
 
 
 # -------------------------------------------------------------------
@@ -117,9 +129,11 @@ def d_data():
     df, df2 = table.table()
 
     samp = SamplingData(Diabet, "Outcome")
-    samp = samp.sampling_data()
+    samp1 = samp.sampling_data()
 
-    x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp
+    x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp1
+    pred = samp.pred_models()
+    pred_norm = samp.pred_models_norm()
 
     return render_template('Diabetes.html',
                            tables=[df.to_html(classes='data',
@@ -130,10 +144,13 @@ def d_data():
 
                            x_test_head=[x_test_head.to_html(classes='data',
                                                             index=False)],
-                           x_train=x_train,
-                           x_test=x_test,
-                           y_train=y_train,
-                           y_test=y_test
+                           x_train=x_train.shape,
+                           x_test=x_test.shape,
+                           y_train=y_train.shape,
+                           y_test=y_test.shape,
+                           pred_output=[pred.to_html(classes='data', index=False)],
+                           pred_output_norm=[pred_norm.to_html(classes='data', index=False)],
+
                            )
 
 
@@ -156,15 +173,17 @@ def plot2():
 
 @app.route('/cor2')
 def cor2():
-    correlation = Correlation(Diabet )
+    correlation = Correlation(Diabet)
     img = correlation.cor(11, 9)
     return send_file(img, mimetype='image/png', cache_timeout=-1)
+
 
 @app.route('/imp2')
 def imp2():
     imp = SamplingData(Diabet, "Outcome")
-    img = imp.importance(13,5)
+    img = imp.importance(13, 5)
     return send_file(img, mimetype='image/png', cache_timeout=-1)
+
 
 # -----------------------------------------------------------
 # Maternal Health Risk routes
@@ -176,8 +195,10 @@ def m_data():
     df, df2 = table.table()
 
     samp = SamplingData(Mdata, "RiskLevel")
-    samp = samp.sampling_data()
-    x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp
+    samp1 = samp.sampling_data()
+    x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp1
+    pred = samp.pred_models()
+    pred_norm = samp.pred_models_norm()
 
     return render_template('Mdata.html',
                            tables=[df.to_html(classes='data',
@@ -188,10 +209,13 @@ def m_data():
 
                            x_test_head=[x_test_head.to_html(classes='data',
                                                             index=False)],
-                           x_train=x_train,
-                           x_test=x_test,
-                           y_train=y_train,
-                           y_test=y_test
+                           x_train=x_train.shape,
+                           x_test=x_test.shape,
+                           y_train=y_train.shape,
+                           y_test=y_test.shape,
+                           pred_output=[pred.to_html(classes='data', index=False)],
+                           pred_output_norm=[pred_norm.to_html(classes='data', index=False)],
+
                            )
 
 
@@ -218,8 +242,9 @@ def cor3():
 @app.route('/imp3')
 def imp3():
     imp = SamplingData(Mdata, "RiskLevel")
-    img = imp.importance(7,4)
+    img = imp.importance(7, 4)
     return send_file(img, mimetype='image/png', cache_timeout=-1)
+
 
 # ------------------------------------------------------------------
 
