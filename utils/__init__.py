@@ -1,3 +1,4 @@
+import base64
 import io
 
 import matplotlib.pyplot as plt
@@ -10,14 +11,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
-from xgboost import XGBClassifier
 from sklearn.preprocessing import StandardScaler
 
 
 
-
-
-class Table:
+class DataInfo:
 
     def __init__(self, data):
         self.data = data
@@ -31,14 +29,6 @@ class Table:
         df2 = pd.DataFrame(df2, columns=['Data null values'])
 
         return df, df2
-
-
-
-
-class Correlation:
-    def __init__(self, data):
-        self.data = data
-
     def cor(self, x, y):
         fig, ax = plt.subplots(figsize=(x, y))
         corr = self.data.corr()
@@ -48,7 +38,7 @@ class Correlation:
         img = io.BytesIO()
         fig.savefig(img, format='png')
         img.seek(0)
-
+        img = base64.b64encode(img.getvalue()).decode()
         return img
 
 
@@ -56,8 +46,7 @@ class Correlation:
 
 
 
-
-class SamplingData:
+class DataMod:
     x_train_imp = pd.DataFrame()
     y_train_imp = pd.DataFrame()
     x_test_imp = pd.DataFrame()
@@ -71,20 +60,19 @@ class SamplingData:
         x = self.data.drop(self.target, axis=1)
         y = self.data[[self.target]]
 
-
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
         x_train_head = x_train.head()
         x_test_head = x_test.head()
-        SamplingData.x_train_imp = SamplingData.x_train_imp.append(x_train)
-        SamplingData.x_test_imp = SamplingData.x_test_imp.append(x_test)
-        SamplingData.y_train_imp = SamplingData.y_train_imp.append(y_train)
-        SamplingData.y_test_imp = SamplingData.y_test_imp.append(y_test)
+        DataMod.x_train_imp = pd.DataFrame.from_records(x_train)
+        DataMod.x_test_imp = pd.DataFrame.from_records(x_test)
+        DataMod.y_train_imp = pd.DataFrame.from_records(y_train)
+        DataMod.y_test_imp = pd.DataFrame.from_records(y_test)
 
         return x_train, x_test, y_train, y_test, x_train_head, x_test_head
 
     def importance(self, x, y):
-        x_train = SamplingData.x_train_imp
-        y_train = SamplingData.y_train_imp
+        x_train = DataMod.x_train_imp
+        y_train = DataMod.y_train_imp
         rf = RandomForestClassifier()
         rf.fit(x_train, y_train.values.ravel())
         fig, ax = plt.subplots(figsize=(x, y))
@@ -93,8 +81,9 @@ class SamplingData:
         img = io.BytesIO()
         fig.savefig(img, format='png')
         img.seek(0)
-        SamplingData.x_train_imp = pd.DataFrame()
-        SamplingData.y_train_imp = pd.DataFrame()
+        img = base64.b64encode(img.getvalue()).decode()
+        DataMod.x_train_imp = pd.DataFrame()
+        DataMod.y_train_imp = pd.DataFrame()
         return img
 
     def pred_models_norm(self):
@@ -122,7 +111,6 @@ class SamplingData:
         f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
         model.append('SVC')
 
-
         rfc = RandomForestClassifier(n_estimators=100)
         rfc.fit(x_train, y_train.values.ravel())
         x_pred = rfc.predict(x_test)
@@ -130,20 +118,16 @@ class SamplingData:
         f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
         model.append('Random Forest')
 
-
         dst = DecisionTreeClassifier(criterion='entropy')
         dst.fit(x_train, y_train.values.ravel())
         x_pred = dst.predict(x_test)
         accuracy.append(np.round(accuracy_score(y_test, x_pred), 2))
-        f1.append(np.round(f1_score(y_test,x_pred, average='weighted'), 2))
+        f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
         model.append('Decision Tree')
-
-
 
         output = pd.DataFrame({'Model': model,
                                'Accuracy': accuracy,
                                'F1 score': f1})
-
 
         return output
 
@@ -171,7 +155,6 @@ class SamplingData:
         f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
         model.append('SVC')
 
-
         rfc = RandomForestClassifier(n_estimators=100)
         rfc.fit(x_train, y_train.values.ravel())
         x_pred = rfc.predict(x_test)
@@ -179,20 +162,16 @@ class SamplingData:
         f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
         model.append('Random Forest')
 
-
         dst = DecisionTreeClassifier(criterion='entropy')
         dst.fit(x_train, y_train.values.ravel())
         x_pred = dst.predict(x_test)
         accuracy.append(np.round(accuracy_score(y_test, x_pred), 2))
-        f1.append(np.round(f1_score(y_test,x_pred, average='weighted'), 2))
+        f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
         model.append('Decision Tree')
-
-
 
         output = pd.DataFrame({'Model': model,
                                'Accuracy': accuracy,
                                'F1 score': f1})
-
 
         return output
 
@@ -207,6 +186,19 @@ class SamplingData:
         features = features.delete(0)
         features = features.tolist()
 
+        return features
 
+    def plot_cluster(self, x, y):
+        fig, ax = plt.subplots(figsize=(x, y))
+        x = self.data.drop(self.target, axis=1)
+        x = StandardScaler().fit_transform(x)
 
-        return  features
+        y = self.data[[self.target]]
+        y = y.to_numpy()
+
+        plt.scatter(x[:, 0], x[:, 1], c=y, edgecolors='k', s=20)
+        img = io.BytesIO()
+        fig.savefig(img, format='png')
+        img.seek(0)
+        img = base64.b64encode(img.getvalue()).decode()
+        return img

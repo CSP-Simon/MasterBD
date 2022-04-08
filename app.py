@@ -6,7 +6,7 @@ import pandas as pd
 from flask_navigation import Navigation
 import io
 import seaborn as sns
-from utils import Table, Correlation, SamplingData
+from utils import DataInfo, DataMod
 
 app = Flask(__name__)
 nav = Navigation(app)
@@ -39,9 +39,9 @@ def home():
 
 @app.route('/Breast_Cancer_Data', methods=("POST", "GET"))
 def b_data():
-    table = Table(Bdata)
-    df, df2 = table.table()
-    samp = SamplingData(Bdata, "diagnosis")
+    data = DataInfo(Bdata)
+    df, df2 = data.table()
+    samp = DataMod(Bdata, "diagnosis")
     samp1 = samp.sampling_data()
 
     x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp1
@@ -50,12 +50,14 @@ def b_data():
     features = samp.feat()
     target = ["diagnosis"]
     Bdata_f = Bdata[features + target]
-    samp_f = SamplingData(Bdata_f, "diagnosis")
-    samp1_f = samp.sampling_data()
+    samp_f = DataMod(Bdata_f, "diagnosis")
 
-    x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp1_f
     pred_f = samp_f.pred_models()
     pred_norm_f = samp_f.pred_models_norm()
+    img_scatter = samp.plot_cluster(12, 10)
+
+    img_cor = data.cor(19, 15)
+    img_feature_imp = samp.importance(15, 10)
 
     return render_template('Bdata.html',
                            tables=[df.to_html(classes='data',
@@ -74,9 +76,14 @@ def b_data():
                            pred_output_norm=[pred_norm.to_html(classes='data', index=False)],
                            feat=features,
                            pred_output_f=[pred_f.to_html(classes='data', index=False)],
-                           pred_output_norm_f=[pred_norm_f.to_html(classes='data', index=False)]
+                           pred_output_norm_f=[pred_norm_f.to_html(classes='data', index=False)],
+                           scatter_plot=img_scatter,
+                           cor_plot=img_cor,
+                           feature_imp=img_feature_imp,
+
 
                            )
+
 
 
 @app.route('/plot1')
@@ -104,19 +111,6 @@ def plot1():
     return send_file(img, mimetype='image/png')
 
 
-@app.route('/cor1')
-def cor1():
-    correlation = Correlation(Bdata)
-    img = correlation.cor(19, 15)
-    return send_file(img, mimetype='image/png', cache_timeout=-1)
-
-
-@app.route('/imp1')
-def imp1():
-    imp = SamplingData(Bdata, "diagnosis")
-    img = imp.importance(15, 10)
-    return send_file(img, mimetype='image/png', cache_timeout=-1)
-
 
 # -------------------------------------------------------------------
 
@@ -125,15 +119,18 @@ def imp1():
 
 @app.route('/Diabetes_Data', methods=("POST", "GET"))
 def d_data():
-    table = Table(Diabet)
-    df, df2 = table.table()
+    data = DataInfo(Diabet)
+    df, df2 = data.table()
 
-    samp = SamplingData(Diabet, "Outcome")
+    samp = DataMod(Diabet, "Outcome")
     samp1 = samp.sampling_data()
 
     x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp1
     pred = samp.pred_models()
     pred_norm = samp.pred_models_norm()
+
+    img_cor = data.cor(11, 9)
+    img_feature_imp = samp.importance(16, 5)
 
     return render_template('Diabetes.html',
                            tables=[df.to_html(classes='data',
@@ -150,6 +147,10 @@ def d_data():
                            y_test=y_test.shape,
                            pred_output=[pred.to_html(classes='data', index=False)],
                            pred_output_norm=[pred_norm.to_html(classes='data', index=False)],
+
+                           cor_plot=img_cor,
+                           feature_imp=img_feature_imp,
+
 
                            )
 
@@ -171,18 +172,8 @@ def plot2():
     return send_file(img, mimetype='image/png')
 
 
-@app.route('/cor2')
-def cor2():
-    correlation = Correlation(Diabet)
-    img = correlation.cor(11, 9)
-    return send_file(img, mimetype='image/png', cache_timeout=-1)
 
 
-@app.route('/imp2')
-def imp2():
-    imp = SamplingData(Diabet, "Outcome")
-    img = imp.importance(13, 5)
-    return send_file(img, mimetype='image/png', cache_timeout=-1)
 
 
 # -----------------------------------------------------------
@@ -191,14 +182,17 @@ def imp2():
 
 @app.route('/Maternal_Health_Risk_Data', methods=("POST", "GET"))
 def m_data():
-    table = Table(Mdata)
-    df, df2 = table.table()
+    data = DataInfo(Mdata)
+    df, df2 = data.table()
 
-    samp = SamplingData(Mdata, "RiskLevel")
+    samp = DataMod(Mdata, "RiskLevel")
     samp1 = samp.sampling_data()
     x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp1
     pred = samp.pred_models()
     pred_norm = samp.pred_models_norm()
+
+    img_cor = data.cor(10, 9)
+    img_feature_imp = samp.importance(7, 5)
 
     return render_template('Mdata.html',
                            tables=[df.to_html(classes='data',
@@ -215,6 +209,8 @@ def m_data():
                            y_test=y_test.shape,
                            pred_output=[pred.to_html(classes='data', index=False)],
                            pred_output_norm=[pred_norm.to_html(classes='data', index=False)],
+                           cor_plot=img_cor,
+                           feature_imp=img_feature_imp,
 
                            )
 
@@ -232,18 +228,7 @@ def plot3():
     return send_file(img, mimetype='image/png', cache_timeout=-1)
 
 
-@app.route('/cor3')
-def cor3():
-    correlation = Correlation(Mdata)
-    img = correlation.cor(10, 9)
-    return send_file(img, mimetype='image/png', cache_timeout=-1)
 
-
-@app.route('/imp3')
-def imp3():
-    imp = SamplingData(Mdata, "RiskLevel")
-    img = imp.importance(7, 4)
-    return send_file(img, mimetype='image/png', cache_timeout=-1)
 
 
 # ------------------------------------------------------------------
