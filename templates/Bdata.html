@@ -38,16 +38,16 @@
 <h2>Feature Importance</h2>
 <img src="data:image/png;base64, {{ feature_imp }}">
 
-<h3>Prediction</h3>
- <div class="container">
- <div class="tableLeft">
- <h4>Prediction without normalization </h4>
-{% for table in pred_output %}
-            {{ table|safe }}
-{% endfor %}
- </div>
-
- <div class="tableRight">
+{#<h3>Prediction</h3>#}
+{# <div class="container">#}
+{# <div class="tableLeft">#}
+{# <h4>Prediction without normalization </h4>#}
+{#{% for table in pred_output %}#}
+{#            {{ table|safe }}#}
+{#{% endfor %}#}
+{# </div>#}
+{##}
+{# <div class="tableRight">#}
  <h4>Prediction with normalization </h4>
 {% for table in pred_output_norm %}
             {{ table|safe }}
@@ -55,16 +55,16 @@
  </div>
  </div>
 
- <h3>Prediction with selected features</h3>
- <div class="container">
- <div class="tableLeft">
- <h4>Prediction without normalization </h4>
-{% for table in pred_output_f %}
-            {{ table|safe }}
-{% endfor %}
- </div>
-
- <div class="tableRight">
+<h3>Prediction with selected features</h3>
+{# <div class="container">#}
+{# <div class="tableLeft">#}
+{# <h4>Prediction without normalization </h4>#}
+{#{% for table in pred_output_f %}#}
+{#            {{ table|safe }}#}
+{#{% endfor %}#}
+{# </div>#}
+{##}
+{# <div class="tableRight">#}
  <h4>Prediction with normalization </h4>
 {% for table in pred_output_norm_f %}
             {{ table|safe }}
@@ -73,9 +73,9 @@
  </div>
 <p>features: {{  feat }}</p>
 
-<h2>Cluster</h2>
-
-<img src="data:image/png;base64, {{ scatter_plot }}">
+{#<h2>Cluster</h2>#}
+{##}
+{#<img src="data:image/png;base64, {{ scatter_plot }}">#}
 
 </body>
 </html>

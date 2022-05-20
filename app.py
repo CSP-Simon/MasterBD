@@ -20,6 +20,10 @@ Bdata.drop(['Unnamed: 32', 'id'], axis=1, inplace=True)
 
 Bdata.diagnosis.replace(['M', 'B'], [1, 0], inplace=True)
 
+Mdata.RiskLevel.replace(['low risk', 'mid risk','high risk'], [0, 1, 2], inplace=True)
+
+
+
 nav.Bar('top', [
     nav.Item('Breast Cancer data', 'b_data'),
     nav.Item('Diabetes data', 'd_data'),
@@ -45,16 +49,16 @@ def b_data():
     samp1 = samp.sampling_data()
 
     x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp1
-    pred = samp.pred_models()
+    # pred = samp.pred_models()
     pred_norm = samp.pred_models_norm()
     features = samp.feat()
     target = ["diagnosis"]
     Bdata_f = Bdata[features + target]
     samp_f = DataMod(Bdata_f, "diagnosis")
 
-    pred_f = samp_f.pred_models()
+    # pred_f = samp_f.pred_models()
     pred_norm_f = samp_f.pred_models_norm()
-    img_scatter = samp.plot_cluster(12, 10)
+    #img_scatter = samp.plot_cluster(12, 10)
 
     img_cor = data.cor(19, 15)
     img_feature_imp = samp.importance(15, 10)
@@ -72,12 +76,12 @@ def b_data():
                            y_train=y_train.shape,
                            x_test=x_test.shape,
                            y_test=y_test.shape,
-                           pred_output=[pred.to_html(classes='data', index=False)],
+                           # pred_output=[pred.to_html(classes='data', index=False)],
                            pred_output_norm=[pred_norm.to_html(classes='data', index=False)],
                            feat=features,
-                           pred_output_f=[pred_f.to_html(classes='data', index=False)],
+                           # pred_output_f=[pred_f.to_html(classes='data', index=False)],
                            pred_output_norm_f=[pred_norm_f.to_html(classes='data', index=False)],
-                           scatter_plot=img_scatter,
+                           # scatter_plot=img_scatter,
                            cor_plot=img_cor,
                            feature_imp=img_feature_imp,
 
@@ -126,11 +130,12 @@ def d_data():
     samp1 = samp.sampling_data()
 
     x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp1
-    pred = samp.pred_models()
+    # pred = samp.pred_models()
     pred_norm = samp.pred_models_norm()
 
-    img_cor = data.cor(11, 9)
+    img_cor = data.cor(15, 13)
     img_feature_imp = samp.importance(16, 5)
+
 
     return render_template('Diabetes.html',
                            tables=[df.to_html(classes='data',
@@ -145,9 +150,8 @@ def d_data():
                            x_test=x_test.shape,
                            y_train=y_train.shape,
                            y_test=y_test.shape,
-                           pred_output=[pred.to_html(classes='data', index=False)],
+                           # pred_output=[pred.to_html(classes='data', index=False)],
                            pred_output_norm=[pred_norm.to_html(classes='data', index=False)],
-
                            cor_plot=img_cor,
                            feature_imp=img_feature_imp,
 
@@ -188,7 +192,7 @@ def m_data():
     samp = DataMod(Mdata, "RiskLevel")
     samp1 = samp.sampling_data()
     x_train, x_test, y_train, y_test, x_train_head, x_test_head = samp1
-    pred = samp.pred_models()
+    # pred = samp.pred_models()
     pred_norm = samp.pred_models_norm()
 
     img_cor = data.cor(10, 9)
@@ -207,7 +211,7 @@ def m_data():
                            x_test=x_test.shape,
                            y_train=y_train.shape,
                            y_test=y_test.shape,
-                           pred_output=[pred.to_html(classes='data', index=False)],
+                           # pred_output=[pred.to_html(classes='data', index=False)],
                            pred_output_norm=[pred_norm.to_html(classes='data', index=False)],
                            cor_plot=img_cor,
                            feature_imp=img_feature_imp,
@@ -216,7 +220,9 @@ def m_data():
 
 
 @app.route('/plot3')
+
 def plot3():
+    Mdata.RiskLevel.replace([0, 1, 2], ['low risk', 'mid risk', 'high risk'], inplace=True)
     fig, axes = plt.subplots(nrows=2, figsize=(10, 15))
     order = ['low risk', 'mid risk', 'high risk']
     sns.countplot(x='RiskLevel', data=Mdata, ax=axes[0], order=order).set(

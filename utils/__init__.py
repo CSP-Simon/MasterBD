@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import StandardScaler
-
+from sklearn.model_selection import GridSearchCV
 
 
 class DataInfo:
@@ -29,6 +29,7 @@ class DataInfo:
         df2 = pd.DataFrame(df2, columns=['Data null values'])
 
         return df, df2
+
     def cor(self, x, y):
         fig, ax = plt.subplots(figsize=(x, y))
         corr = self.data.corr()
@@ -40,10 +41,6 @@ class DataInfo:
         img.seek(0)
         img = base64.b64encode(img.getvalue()).decode()
         return img
-
-
-
-
 
 
 class DataMod:
@@ -125,55 +122,64 @@ class DataMod:
         f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
         model.append('Decision Tree')
 
+        # grid_values = { 'C': np.logspace(-3,40,100)}
+        # grid_lr = GridSearchCV(lr, param_grid=grid_values, scoring='recall')
+        # grid_lr.fit(x_train, y_train.values.ravel())
+        # x_pred = grid_lr.predict(x_test)
+        #
+        # accuracy.append(np.round(accuracy_score(y_test, x_pred), 2))
+        # f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
+        # model.append('Logistic regresion tuning')
         output = pd.DataFrame({'Model': model,
                                'Accuracy': accuracy,
                                'F1 score': f1})
 
-        return output
-
-    def pred_models(self):
-        accuracy = []
-        f1 = []
-        model = []
-        x = self.data.drop(self.target, axis=1)
-        y = self.data[[self.target]]
-
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
-
-        lr = LogisticRegression()
-        lr.fit(x_train, y_train.values.ravel())
-        x_pred = lr.predict(x_test)
-
-        accuracy.append(np.round(accuracy_score(y_test, x_pred), 2))
-        f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
-        model.append('Logistic Regression')
-
-        svc = SVC()
-        svc.fit(x_train, y_train.values.ravel())
-        x_pred = svc.predict(x_test)
-        accuracy.append(np.round(accuracy_score(y_test, x_pred), 2))
-        f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
-        model.append('SVC')
-
-        rfc = RandomForestClassifier(n_estimators=100)
-        rfc.fit(x_train, y_train.values.ravel())
-        x_pred = rfc.predict(x_test)
-        accuracy.append(np.round(accuracy_score(y_test, x_pred), 2))
-        f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
-        model.append('Random Forest')
-
-        dst = DecisionTreeClassifier(criterion='entropy')
-        dst.fit(x_train, y_train.values.ravel())
-        x_pred = dst.predict(x_test)
-        accuracy.append(np.round(accuracy_score(y_test, x_pred), 2))
-        f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
-        model.append('Decision Tree')
-
-        output = pd.DataFrame({'Model': model,
-                               'Accuracy': accuracy,
-                               'F1 score': f1})
 
         return output
+
+    # def pred_models(self):
+    #     accuracy = []
+    #     f1 = []
+    #     model = []
+    #     x = self.data.drop(self.target, axis=1)
+    #     y = self.data[[self.target]]
+    #
+    #     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
+    #
+    #     lr = LogisticRegression()
+    #     lr.fit(x_train, y_train.values.ravel())
+    #     x_pred = lr.predict(x_test)
+    #
+    #     accuracy.append(np.round(accuracy_score(y_test, x_pred), 2))
+    #     f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
+    #     model.append('Logistic Regression')
+    #
+    #     svc = SVC()
+    #     svc.fit(x_train, y_train.values.ravel())
+    #     x_pred = svc.predict(x_test)
+    #     accuracy.append(np.round(accuracy_score(y_test, x_pred), 2))
+    #     f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
+    #     model.append('SVC')
+    #
+    #     rfc = RandomForestClassifier(n_estimators=100)
+    #     rfc.fit(x_train, y_train.values.ravel())
+    #     x_pred = rfc.predict(x_test)
+    #     accuracy.append(np.round(accuracy_score(y_test, x_pred), 2))
+    #     f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
+    #     model.append('Random Forest')
+    #
+    #     dst = DecisionTreeClassifier(criterion='entropy')
+    #     dst.fit(x_train, y_train.values.ravel())
+    #     x_pred = dst.predict(x_test)
+    #     accuracy.append(np.round(accuracy_score(y_test, x_pred), 2))
+    #     f1.append(np.round(f1_score(y_test, x_pred, average='weighted'), 2))
+    #     model.append('Decision Tree')
+    #
+    #     output = pd.DataFrame({'Model': model,
+    #                            'Accuracy': accuracy,
+    #                            'F1 score': f1})
+    #
+    #     return output
 
     def feat(self):
         corr = self.data.corr()
@@ -202,3 +208,4 @@ class DataMod:
         img.seek(0)
         img = base64.b64encode(img.getvalue()).decode()
         return img
+
