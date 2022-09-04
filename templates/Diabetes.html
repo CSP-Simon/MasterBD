@@ -21,6 +21,10 @@
 
 <h2>Correlation</h2>
 <img src="data:image/png;base64, {{ cor_plot }}">
+
+
+
+
 <h2>Sampling</h2>
 
 <h3>Shapes of the data frame after sampling</h3>
@@ -41,20 +45,42 @@
 <h2>Feature Importance</h2>
 <img src="data:image/png;base64, {{ feature_imp }}">
 
-{#<h3>Prediction</h3>#}
-{# <div class="container">#}
-{# <div class="tableLeft">#}
-{# <h4>Prediction without normalization </h4>#}
-{#{% for table in pred_output %}#}
-{#            {{ table|safe }}#}
-{#{% endfor %}#}
-{# </div>#}
-{##}
-{# <div class="tableRight">#}
- <h4>Prediction with normalization </h4>
+ <h4>Prediction with all features </h4>
 {% for table in pred_output_norm %}
             {{ table|safe }}
 {% endfor %}
+
+ <h2>Feature engineering  </h2>
+{% for table in feat_eng_data %}
+            {{ table|safe }}
+{% endfor %}
+
+   <h2>Plot insulin</h2>
+<img src="data:image/png;base64, {{ insulin_img }}">
+
+
+  <h2>Plot BMI</h2>
+<img src="data:image/png;base64, {{ BMI_img }}">
+
+ <h2>Plot Glucose</h2>
+<img src="data:image/png;base64, {{ glucose_img}}">
+
+<h2>Head of Data with feature engineering</h2>
+{% for table in  Diabet_eng_head %}
+            {{ table|safe }}
+{% endfor %}
+ <h4>Prediction with feature engineering </h4>
+{% for table in pred_feat_eng %}
+            {{ table|safe }}
+{% endfor %}
+ <h2>Clasification Report </h2>
+{% for table in  clasif_report %}
+            {{ table|safe }}
+{% endfor %}
+
+<img src="data:image/png;base64, {{img_report}}">
+ <h2>Plot Shap summary </h2>
+<img src="data:image/png;base64, {{ shap_summary}}">
  </div>
  </div>
 

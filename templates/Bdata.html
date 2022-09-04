@@ -16,10 +16,9 @@
 <img src = "/plot1" >
 
 
-<h2>Correlation</h2>
-<img src="data:image/png;base64, {{ cor_plot }}">
+<h2>Correlation lower triangle</h2>
+<img src="data:image/png;base64, {{ cor_plot_all }}">
 
-<h2>Sampling</h2>
 
 <h3>Shapes of the data frame after sampling</h3>
 <p>x_train shape: {{  x_train }}</p>
@@ -41,41 +40,45 @@
 {#<h3>Prediction</h3>#}
 {# <div class="container">#}
 {# <div class="tableLeft">#}
-{# <h4>Prediction without normalization </h4>#}
+{# <h3>Prediction with all feature </h3>#}
 {#{% for table in pred_output %}#}
 {#            {{ table|safe }}#}
 {#{% endfor %}#}
 {# </div>#}
 {##}
 {# <div class="tableRight">#}
- <h4>Prediction with normalization </h4>
+ <h4>Prediction with all features </h4>
 {% for table in pred_output_norm %}
             {{ table|safe }}
 {% endfor %}
  </div>
  </div>
-
-<h3>Prediction with selected features</h3>
-{# <div class="container">#}
-{# <div class="tableLeft">#}
-{# <h4>Prediction without normalization </h4>#}
-{#{% for table in pred_output_f %}#}
-{#            {{ table|safe }}#}
-{#{% endfor %}#}
-{# </div>#}
-{##}
-{# <div class="tableRight">#}
- <h4>Prediction with normalization </h4>
-{% for table in pred_output_norm_f %}
+ <h4>Prediction with feature selection and cross-validation</h4>
+{% for table in feature_selection_cv %}
             {{ table|safe }}
 {% endfor %}
  </div>
  </div>
-<p>features: {{  feat }}</p>
 
-{#<h2>Cluster</h2>#}
-{##}
-{#<img src="data:image/png;base64, {{ scatter_plot }}">#}
+
+ <h2>Clasification Report </h2>
+{% for table in  clasif_report %}
+            {{ table|safe }}
+{% endfor %}
+ <img src="data:image/png;base64, {{img_report}}">
+
+ <h4>Testing example for Lime package</h4>
+
+{% for table in  test_pred_ex %}
+            {{ table|safe }}
+{% endfor %}
+
+<h2>Lime e xplainer</h2>
+<img src="data:image/png;base64, {{  lime_explainer }}">
+
+ <h2>Plot Shap summary </h2>
+
+
 
 </body>
 </html>
