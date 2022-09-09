@@ -304,7 +304,10 @@ def plot3():
 
     return send_file(img, mimetype='image/png', cache_timeout=-1)
   ``` 
-  
+ The output:
+ 
+ ![Alt text](/static/Maternal_plot.png?raw=true )
+ 
   The result shows that the actual median is higher
 in the case of the high-risk feature and lower in the low and mid risk features, this
 particular case indicates just like in the example before that the high risk or the bad
