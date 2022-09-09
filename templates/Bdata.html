@@ -67,16 +67,15 @@
 {% endfor %}
  <img src="data:image/png;base64, {{img_report}}">
 
- <h4>Testing example for Lime package</h4>
 
 {% for table in  test_pred_ex %}
             {{ table|safe }}
 {% endfor %}
 
 <h2>Lime e xplainer</h2>
-<img src="data:image/png;base64, {{  lime_explainer }}">
+<img src="{{url_for('static',filename = 'imag_lime.png')}}">
 
- <h2>Plot Shap summary </h2>
+
 
 
 

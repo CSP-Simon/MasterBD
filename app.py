@@ -12,6 +12,10 @@ import base64
 import shap
 import lime
 import lime.lime_tabular
+from html2image import Html2Image
+import matplotlib as mpl
+
+mpl.use
 app = Flask(__name__)
 nav = Navigation(app)
 
@@ -73,6 +77,10 @@ def b_data():
     lime_explainer = explainer.explain_instance(choosen_instance, predict_rfc, num_features=15)
     lime_explainer.save_to_file("lime.html")
 
+    hti = Html2Image()
+    hti.output_path = 'static'
+    hti.screenshot(html_file='lime.html', save_as='imag_lime.png')
+
     return render_template('Bdata.html',
                            tables=[df.to_html(classes='data',
                                               index=False), df2.to_html(classes='data')],
@@ -126,6 +134,7 @@ def plot1():
     img = io.BytesIO()
     fig.savefig(img, format='png')
     img.seek(0)
+    plt.close()
     return send_file(img, mimetype='image/png')
 
 # -------------------------------------------------------------------
@@ -175,17 +184,22 @@ def d_data():
     pred_feat_eng=samp_feat_eng.pred_models_norm(x_train_f,x_test_f,y_train_f,y_test_f)
     prediction_scv_cv=samp_feat_eng.prefiction_svc
     clasif_report,img_report = samp_feat_eng.get_classification_report(y_test_f,prediction_scv_cv)
-    svc = SVC(random_state=1, kernel="linear")
-    svc.fit(x_train_f, y_train_f.values.ravel())
-    svc_explainer = shap.KernelExplainer(svc.predict, x_test_f)
-    svc_shap_values = svc_explainer.shap_values(x_test_f)
-    shap_summary=shap.summary_plot(svc_shap_values, x_test_f)
+    # svc = SVC(random_state=1, kernel="linear")
+    # svc.fit(x_train_f, y_train_f.values.ravel())
+    # svc_explainer = shap.KernelExplainer(svc.predict, x_test_f)
+    # mpl.rcParams['savefig.directory'] = "static"
+    # # svc_shap_values = svc_explainer.shap_values(x_test_f)
+    # # shap.summary_plot(svc_shap_values, x_test_f)
+    # # plt.savefig('shap_summary.png')
+    # # plt.close()
+
+
     return render_template('Diabetes.html',
                            tables=[df.to_html(classes='data',
                                               index=False), df2.to_html(classes='data')],
                            x_train_head=[x_train_head.to_html(classes='data',
                                                               index=False)],
-                           x_test_head=[x_test_head.to_html(classes='data',                                                          index=False)],
+                           x_test_head=[x_test_head.to_html(classes='data',index=False)],
                            x_train=x_train.shape,
                            x_test=x_test.shape,
                            y_train=y_train.shape,
@@ -199,7 +213,7 @@ def d_data():
                            BMI_img=img_BMI,
                            glucose_img=img_glucose,
                            clasif_report=[clasif_report.to_html(classes='data', index=True)],
-                           img_report=img_report,                    shap_summary=shap_summary,
+                           img_report=img_report,
                            Diabet_eng_head=[Diabet_eng_head.to_html(classes='data', index=False)] )
 
 
@@ -217,6 +231,7 @@ def plot2():
     img = io.BytesIO()
     fig.savefig(img, format='png')
     img.seek(0)
+    plt.close()
     return send_file(img, mimetype='image/png')
 
 
@@ -272,6 +287,7 @@ def plot3():
     img = io.BytesIO()
     fig.savefig(img, format='png')
     img.seek(0)
+    plt.close()
     return send_file(img, mimetype='image/png', cache_timeout=-1)
 
 

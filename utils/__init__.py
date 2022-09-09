@@ -40,6 +40,7 @@ class DataInfo:
         fig.savefig(img, format='png')
         img.seek(0)
         img = base64.b64encode(img.getvalue()).decode()
+        plt.close()
         return img
 
 
@@ -72,6 +73,7 @@ class DataMod:
         fig.savefig(img, format='png')
         img.seek(0)
         img = base64.b64encode(img.getvalue()).decode()
+        plt.close()
 
         return img
 
@@ -218,6 +220,7 @@ class DataMod:
         fig.savefig(img, format='png')
         img.seek(0)
         img = base64.b64encode(img.getvalue()).decode()
+        plt.close()
 
         return df_classification_report, img
 

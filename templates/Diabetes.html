@@ -80,7 +80,7 @@
 
 <img src="data:image/png;base64, {{img_report}}">
  <h2>Plot Shap summary </h2>
-<img src="data:image/png;base64, {{ shap_summary}}">
+<img src="{{url_for('static',filename = 'shap_summary.png')}}">
  </div>
  </div>
 
