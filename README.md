@@ -70,8 +70,13 @@ The projects for this application is structured as follow:
 
 The data sets used in this application are Breast cancer data, Diabetes data and Maternal health Risk data
 
+To run this application, we simply run the code in PyCharm and Flask will create a local server for the web application. If we use the address of the local server in our browser, we get the following:
 
+![Alt text](/static/image1.png?raw=true )
 
+And when we open the pages for the date the code will render the specific template for the dataand display the folowing:
+
+![Alt text](/static/image2.png?raw=true )
 
 
 
